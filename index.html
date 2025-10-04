@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ucapan Ulang Tahun</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      overflow-x: hidden;
+    }
+    .page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .hidden { display: none; }
+    input { display: block; margin: 10px auto; padding: 10px; width: 250px; border: none; border-radius: 8px; }
+    button { margin-top: 15px; padding: 12px 20px; background: #ff6ec7; border: none; color: white; border-radius: 8px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+    button:hover { background: #ff47b8; }
+    .decorations { position: relative; margin-top: 20px; }
+    .cake { width: 200px; margin: 20px auto; }
+    .balloon { width: 100px; position: absolute; top: 0; animation: float 4s ease-in-out infinite; }
+    .balloon.left { left: -120px; }
+    .balloon.right { right: -120px; }
+    .flower { width: 80px; position: absolute; bottom: 0; }
+    .flower.left { left: 20px; }
+    .flower.right { right: 20px; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <!-- Halaman Input -->
+  <div class="page" id="formPage">
+    <h1>🎉 haloooo ,hari ini hari apa yaaa😀😀 🎉</h1>
+    <p>tulis nama kamu yaaaa:</p>
+    <form id="birthdayForm">
+      <input type="text" id="nama" placeholder="nama kau" required>
+      <input type="number" id="umur" placeholder="Umur kau" required>
+      <button type="submit">Lanjutkan ➡️</button>
+    </form>
+  </div>
+
+  <!-- Halaman Ucapan -->
+  <div class="page hidden" id="greetPage">
+    <h1 id="greetingText"></h1>
+    <p id="ageText"></p>
+    <div class="decorations">
+      <img src="img/fotonesa.jpg" alt="Kue Ulang Tahun" class="cake">
+      <img src="img/kucing1.jpg" alt="Balon" class="balloon left">
+      <img src="img/kucing1.jpg" alt="Balon" class="balloon right">
+      <img src="img/kicing.jpg" alt="Bunga" class="flower left">
+      <img src="img/kicing.jpg" alt="Bunga" class="flower right">
+    </div>
+    <canvas id="confetti"></canvas>
+    <audio id="music" src="https://www.bensound.com/bensound-music/bensound-celebration.mp3" loop></audio>
+  </div>
+
+  <script>
+    console.log("JS sudah terbaca ✅");
+
+    document.getElementById("birthdayForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      console.log("Form disubmit ✅");
+
+      const nama = document.getElementById("nama").value;
+      const umur = document.getElementById("umur").value;
+
+      console.log("Nama:", nama, "Umur:", umur);
+
+      document.getElementById("formPage").classList.add("hidden");
+      document.getElementById("greetPage").classList.remove("hidden");
+
+      document.getElementById("greetingText").innerText = `🎉 hbd yeeee,semoga yg di semogakan tersemogakanyaa ${nama}! 🎉`;
+      document.getElementById("ageText").innerText = `cie nambah umurr nihh ${umur} tahun 🎂,izin minta foto satu yaa😀`;
+      document.getElementById("music").play();
+      startConfetti();
+    });
+
+    function startConfetti() {
+      const canvas = document.getElementById("confetti");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const confetti = [];
+      for (let i = 0; i < 200; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 2,
+          d: Math.random() * 0.5 + 0.5,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confetti.forEach(c => {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2, false);
+          ctx.fillStyle = c.color;
+          ctx.fill();
+        });
+        update();
+      }
+
+      function update() {
+        confetti.forEach(c => {
+          c.y += c.d * 4;
+          if (c.y > canvas.height) {
+            c.y = -10;
+            c.x = Math.random() * canvas.width;
+          }
+        });
+      }
+
+      setInterval(draw, 20);
+    }
+  </script>
+</body>
+</html>
